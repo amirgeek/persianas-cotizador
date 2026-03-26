@@ -316,33 +316,35 @@ function App() {
                 )}
               </section>
 
-              <aside className="summary-panel white-summary">
-                <div className="summary-top">
-                  <span className="eyebrow">Resumen</span>
-                  <h3>Tu cotización</h3>
-                </div>
+              {canFinish && (
+                <aside className="summary-panel white-summary">
+                  <div className="summary-top">
+                    <span className="eyebrow">Resumen</span>
+                    <h3>Tu cotización</h3>
+                  </div>
 
-                <div className="summary-list">
-                  <SummaryItem label="Tipo de trabajo" value={workTypes.find((item) => item.id === form.workType)?.title} />
-                  {needsInstallMode && <SummaryItem label="Modalidad" value={installChoices.find((item) => item.id === form.installMode)?.title} />}
-                  <SummaryItem label="Accionamiento" value={modes.find((item) => item.id === form.actionMode)?.title} />
-                  <SummaryItem label="Aberturas" value={String(form.windows.length)} />
-                  <SummaryItem label="Superficie total" value={totals.totalSqm ? `${totals.totalSqm.toFixed(2)} m²` : ''} />
-                </div>
+                  <div className="summary-list">
+                    <SummaryItem label="Tipo de trabajo" value={workTypes.find((item) => item.id === form.workType)?.title} />
+                    {needsInstallMode && <SummaryItem label="Modalidad" value={installChoices.find((item) => item.id === form.installMode)?.title} />}
+                    <SummaryItem label="Accionamiento" value={modes.find((item) => item.id === form.actionMode)?.title} />
+                    <SummaryItem label="Aberturas" value={String(form.windows.length)} />
+                    <SummaryItem label="Superficie total" value={totals.totalSqm ? `${totals.totalSqm.toFixed(2)} m²` : ''} />
+                  </div>
 
-                <div className="summary-total">
-                  <span className="mini-label">Estimado</span>
-                  <div className="total-value">{formatCurrency(totals.total)}</div>
-                </div>
+                  <div className="summary-total">
+                    <span className="mini-label">Estimado</span>
+                    <div className="total-value">{formatCurrency(totals.total)}</div>
+                  </div>
 
-                <a className={`primary-button full-width ${!canFinish ? 'disabled' : ''}`} href={canFinish ? whatsappHref : undefined} target="_blank" rel="noreferrer">
-                  Enviar cotización por WhatsApp
-                </a>
+                  <a className="primary-button full-width" href={whatsappHref} target="_blank" rel="noreferrer">
+                    Enviar cotización por WhatsApp
+                  </a>
 
-                <div className="note-box light-note">
-                  Prototipo con costos inventados para validar la UX. Después se ajusta con precios reales.
-                </div>
-              </aside>
+                  <div className="note-box light-note">
+                    Prototipo con costos inventados para validar la UX. Después se ajusta con precios reales.
+                  </div>
+                </aside>
+              )}
             </div>
           </div>
         </div>
