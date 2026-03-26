@@ -171,7 +171,7 @@ function App() {
     <div className="page-shell">
       <header className="topbar">
         <div className="brand-wrap">
-          <div className="brand-mark">RU</div>
+          <img src="/roll-up.png" alt="Roll Up" className="brand-logo" />
           <div>
             <div className="brand">ROLL UP</div>
             <div className="brand-sub">Persianas · Motorización · Cajón exterior</div>
