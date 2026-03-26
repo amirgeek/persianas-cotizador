@@ -308,6 +308,28 @@ input {
 .primary-button.disabled { opacity: 0.45; pointer-events: none; }
 .note-box { margin-top: 18px; padding: 16px; border-radius: 20px; }
 .light-note { background: #fafafa; }
+.compact-summary { align-self: end; }
+.result-backdrop { z-index: 70; }
+.result-modal {
+  width: min(560px, 100%);
+  background: #fff;
+  border-radius: 28px;
+  border: 1px solid rgba(20,20,20,0.08);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.18);
+  padding: 28px;
+}
+.result-topbar { margin-bottom: 8px; }
+.result-total-box {
+  margin: 24px 0;
+  padding: 24px;
+  border-radius: 24px;
+  background: #fafafa;
+  border: 1px solid rgba(20,20,20,0.06);
+}
+.result-total-box p {
+  margin: 10px 0 0;
+  color: rgba(20,20,20,0.62);
+}
 
 @media (max-width: 1100px) {
   .hero-section,

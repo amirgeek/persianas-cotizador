@@ -53,6 +53,7 @@ function formatCurrency(value) {
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isResultOpen, setIsResultOpen] = useState(false);
   const [form, setForm] = useState({
     workType: '',
     installMode: '',
@@ -144,6 +145,7 @@ function App() {
 
   const resetAndClose = () => {
     setIsModalOpen(false);
+    setIsResultOpen(false);
     setForm({ workType: '', installMode: '', actionMode: '', windows: initialWindows });
   };
 
@@ -151,7 +153,7 @@ function App() {
     <div className="page-shell">
       <header className="topbar">
         <div className="brand">PERSIANAS</div>
-        <button className="nav-button" onClick={() => setIsModalOpen(true)}>Cotizar</button>
+        <button className="nav-button" onClick={() => { setIsModalOpen(true); setIsResultOpen(false); }}>Cotizar</button>
       </header>
 
       <main>
@@ -163,7 +165,7 @@ function App() {
               Mostrá tu servicio como algo serio: una landing limpia, un flujo guiado y una cotización estimada que el cliente puede enviar por WhatsApp en minutos.
             </p>
             <div className="hero-actions">
-              <button className="primary-button" onClick={() => setIsModalOpen(true)}>Cotizar ahora</button>
+              <button className="primary-button" onClick={() => { setIsModalOpen(true); setIsResultOpen(false); }}>Cotizar ahora</button>
               <a className="secondary-link" href="#como-funciona">Cómo funciona</a>
             </div>
           </div>
@@ -317,34 +319,55 @@ function App() {
               </section>
 
               {canFinish && (
-                <aside className="summary-panel white-summary">
+                <aside className="summary-panel white-summary compact-summary">
                   <div className="summary-top">
-                    <span className="eyebrow">Resumen</span>
-                    <h3>Tu cotización</h3>
+                    <span className="eyebrow">Siguiente paso</span>
+                    <h3>Ya podés ver tu cotización</h3>
                   </div>
 
-                  <div className="summary-list">
-                    <SummaryItem label="Tipo de trabajo" value={workTypes.find((item) => item.id === form.workType)?.title} />
-                    {needsInstallMode && <SummaryItem label="Modalidad" value={installChoices.find((item) => item.id === form.installMode)?.title} />}
-                    <SummaryItem label="Accionamiento" value={modes.find((item) => item.id === form.actionMode)?.title} />
-                    <SummaryItem label="Aberturas" value={String(form.windows.length)} />
-                    <SummaryItem label="Superficie total" value={totals.totalSqm ? `${totals.totalSqm.toFixed(2)} m²` : ''} />
-                  </div>
+                  <p className="section-copy">Cuando quieras, abrimos el resumen final con el valor estimado y el acceso a WhatsApp.</p>
 
-                  <div className="summary-total">
-                    <span className="mini-label">Estimado</span>
-                    <div className="total-value">{formatCurrency(totals.total)}</div>
-                  </div>
-
-                  <a className="primary-button full-width" href={whatsappHref} target="_blank" rel="noreferrer">
-                    Continuar por WhatsApp
-                  </a>
-
-                  <div className="note-box light-note">
-                    Prototipo con costos inventados para validar la UX. Después se ajusta con precios reales.
-                  </div>
+                  <button className="primary-button full-width" onClick={() => setIsResultOpen(true)}>
+                    Continuar
+                  </button>
                 </aside>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isResultOpen && canFinish && (
+        <div className="modal-backdrop result-backdrop" onClick={() => setIsResultOpen(false)}>
+          <div className="result-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-topbar result-topbar">
+              <div>
+                <div className="eyebrow">Resultado</div>
+                <h2>Tu cotización estimada</h2>
+              </div>
+              <button className="close-button" onClick={() => setIsResultOpen(false)}>✕</button>
+            </div>
+
+            <div className="summary-list">
+              <SummaryItem label="Tipo de trabajo" value={workTypes.find((item) => item.id === form.workType)?.title} />
+              {needsInstallMode && <SummaryItem label="Modalidad" value={installChoices.find((item) => item.id === form.installMode)?.title} />}
+              <SummaryItem label="Accionamiento" value={modes.find((item) => item.id === form.actionMode)?.title} />
+              <SummaryItem label="Aberturas" value={String(form.windows.length)} />
+              <SummaryItem label="Superficie total" value={`${totals.totalSqm.toFixed(2)} m²`} />
+            </div>
+
+            <div className="result-total-box">
+              <span className="mini-label">Estimado</span>
+              <div className="total-value">{formatCurrency(totals.total)}</div>
+              <p>Valor orientativo según las medidas cargadas.</p>
+            </div>
+
+            <a className="primary-button full-width" href={whatsappHref} target="_blank" rel="noreferrer">
+              Continuar por WhatsApp
+            </a>
+
+            <div className="note-box light-note">
+              Prototipo con costos inventados para validar la UX. Después se ajusta con precios reales.
             </div>
           </div>
         </div>
