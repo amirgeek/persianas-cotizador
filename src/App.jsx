@@ -149,6 +149,24 @@ function App() {
     setForm({ workType: '', installMode: '', actionMode: '', windows: initialWindows });
   };
 
+  const goBack = () => {
+    if (isResultOpen) {
+      setIsResultOpen(false);
+      return;
+    }
+    if (form.actionMode) {
+      setForm((current) => ({ ...current, actionMode: '' }));
+      return;
+    }
+    if (needsInstallMode && form.installMode) {
+      setForm((current) => ({ ...current, installMode: '' }));
+      return;
+    }
+    if (form.workType) {
+      setForm((current) => ({ ...current, workType: '' }));
+    }
+  };
+
   return (
     <div className="page-shell">
       <header className="topbar">
@@ -230,7 +248,7 @@ function App() {
 
                 {form.workType && needsInstallMode && !form.installMode && (
                   <div className="stack">
-                    <button className="back-link" onClick={() => setForm((current) => ({ ...current, workType: '', installMode: '', actionMode: '' }))}>← Volver</button>
+                    <button className="back-link" onClick={goBack}>← Volver</button>
                     <h3>Ahora elegí cómo querés hacerlo</h3>
                     <div className="grid cards-grid two-columns">
                       {installChoices.map((item) => (
@@ -249,7 +267,7 @@ function App() {
 
                 {form.workType && (!needsInstallMode || form.installMode) && !form.actionMode && (
                   <div className="stack">
-                    <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '', installMode: needsInstallMode ? '' : current.installMode }))}>← Volver</button>
+                    <button className="back-link" onClick={goBack}>← Volver</button>
                     <h3>¿La querés manual o motorizada?</h3>
                     <div className="grid cards-grid two-columns">
                       {modes.map((item) => (
@@ -268,7 +286,7 @@ function App() {
 
                 {form.workType && (!needsInstallMode || form.installMode) && form.actionMode && (
                   <div className="stack">
-                    <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '' }))}>← Volver</button>
+                    <button className="back-link" onClick={goBack}>← Volver</button>
                     <h3>Último paso: cargá las medidas</h3>
                     <p className="section-copy">Escribí el ancho y el alto de cada ventana en metros. Ejemplo: 1.50 de ancho y 1.20 de alto.</p>
                     <div className="windows-list">
