@@ -122,7 +122,7 @@ function App() {
       .join('\n');
   }, [form, totals, needsInstallMode]);
 
-  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`;
+  const whatsappHref = `https://wa.me/5492236688267?text=${encodeURIComponent(whatsappText)}`;
 
   const updateWindow = (index, key, value) => {
     setForm((current) => ({
@@ -337,7 +337,7 @@ function App() {
                   </div>
 
                   <a className="primary-button full-width" href={whatsappHref} target="_blank" rel="noreferrer">
-                    Enviar cotización por WhatsApp
+                    Continuar por WhatsApp
                   </a>
 
                   <div className="note-box light-note">
