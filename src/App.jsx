@@ -221,10 +221,39 @@ function App() {
           </div>
         </section>
 
+        <section className="trust-strip">
+          <div>Fabricación a medida</div>
+          <div>Recambio e instalación</div>
+          <div>Accionamiento manual o motorizado</div>
+          <div>Atención por WhatsApp</div>
+        </section>
+
+        <section className="company-section">
+          <div className="section-heading narrow-heading">
+            <div className="eyebrow">Qué hacemos</div>
+            <h2>Soluciones para obra, recambio y viviendas ya terminadas.</h2>
+            <p>Roll Up acompaña todo el proceso: desde una obra en construcción hasta una casa que necesita resolver una ventana sin persiana.</p>
+          </div>
+          <div className="company-grid">
+            <article className="company-card">
+              <h3>Persianas para obra</h3>
+              <p>Ideal para quienes están construyendo y quieren dejar resuelta la persiana desde el inicio.</p>
+            </article>
+            <article className="company-card">
+              <h3>Recambio de persianas</h3>
+              <p>Reemplazo de sistemas existentes para renovar funcionamiento, estética y comodidad.</p>
+            </article>
+            <article className="company-card">
+              <h3>Cajón exterior</h3>
+              <p>La mejor alternativa cuando la vivienda ya está terminada y la abertura quedó sin persiana.</p>
+            </article>
+          </div>
+        </section>
+
         <section className="features-section rollup-info" id="como-funciona">
           <div className="section-heading">
             <div className="eyebrow">Cómo trabajamos</div>
-            <h2>Un cotizador pensado para que el cliente entienda rápido qué necesita.</h2>
+            <h2>Una forma simple de avanzar desde la consulta hasta la cotización.</h2>
           </div>
           <div className="features-grid">
             <FeatureCard number="01" title="Elegí el tipo de trabajo" text="Obra, recambio o cajón exterior según la situación de la vivienda." />
@@ -232,7 +261,18 @@ function App() {
             <FeatureCard number="03" title="Cargá las medidas" text="Una abertura por vez, con un flujo simple y directo." />
             <FeatureCard number="04" title="Seguimos por WhatsApp" text="La cotización sale lista para enviarla y continuar la atención comercial." />
           </div>
-        </section> 
+        </section>
+
+        <section className="cta-section">
+          <div className="cta-card">
+            <div>
+              <div className="eyebrow">Cotización online</div>
+              <h2>¿Querés una referencia rápida antes de seguir por WhatsApp?</h2>
+              <p>Usá el cotizador para orientarte según el tipo de trabajo, el sistema y las medidas de cada abertura.</p>
+            </div>
+            <button className="primary-button" onClick={() => { setIsModalOpen(true); setIsResultOpen(false); }}>Abrir cotizador</button>
+          </div>
+        </section>
       </main>
 
       {isModalOpen && (
