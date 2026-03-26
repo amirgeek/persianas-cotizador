@@ -38,24 +38,15 @@ button { cursor: pointer; }
   gap: 14px;
 }
 
+.brand-only {
+  gap: 0;
+}
+
 .brand-logo {
-  width: 58px;
-  height: 58px;
+  width: 86px;
+  height: auto;
   object-fit: contain;
   display: block;
-}
-
-.brand {
-  font-size: 0.88rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-.brand-sub {
-  margin-top: 4px;
-  font-size: 0.9rem;
-  color: rgba(20,20,20,0.56);
 }
 
 .nav-button,
