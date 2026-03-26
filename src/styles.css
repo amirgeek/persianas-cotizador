@@ -250,10 +250,11 @@ button { cursor: pointer; }
 
 .choice-card {
   text-align: left;
-  padding: 22px;
+  padding: 26px;
+  min-height: 150px;
 }
 
-.choice-title { display: block; font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+.choice-title { display: block; font-size: 1.18rem; font-weight: 800; margin-bottom: 10px; }
 .choice-card:hover { transform: translateY(-2px); }
 
 .back-link,
@@ -269,17 +270,27 @@ button { cursor: pointer; }
 .window-card { padding: 20px; }
 .window-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .measure-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-label span { display: block; font-size: 13px; color: rgba(20,20,20,0.62); margin-bottom: 8px; }
+label span { display: block; font-size: 15px; font-weight: 600; color: rgba(20,20,20,0.72); margin-bottom: 8px; }
 input {
   width: 100%;
   border-radius: 16px;
-  border: 1px solid rgba(20,20,20,0.1);
+  border: 1px solid rgba(20,20,20,0.12);
   background: #fff;
-  padding: 14px 16px;
+  padding: 18px 18px;
   color: #111;
+  font-size: 18px;
 }
 .window-meta { margin-top: 12px; color: rgba(20,20,20,0.72); }
 .actions-row { margin-top: 18px; }
+.stacked-actions {
+  display: grid;
+  gap: 12px;
+}
+.big-continue {
+  min-height: 58px;
+  font-size: 1rem;
+  font-weight: 700;
+}
 
 .summary-panel {
   padding: 24px;

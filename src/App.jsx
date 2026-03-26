@@ -200,8 +200,8 @@ function App() {
           <div className="modal-shell" onClick={(e) => e.stopPropagation()}>
             <div className="modal-topbar">
               <div>
-                <div className="eyebrow">Cotizador</div>
-                <h2>Cotizá tus persianas</h2>
+                <div className="eyebrow">Cotizador paso a paso</div>
+                <h2>Respondé estas preguntas y te damos un precio estimado</h2>
               </div>
               <button className="close-button" onClick={resetAndClose}>✕</button>
             </div>
@@ -212,7 +212,7 @@ function App() {
 
                 {!form.workType && (
                   <div className="stack">
-                    <h3>¿Qué necesitás?</h3>
+                    <h3>Primero: elegí qué necesitás</h3>
                     <div className="grid cards-grid">
                       {workTypes.map((item) => (
                         <button
@@ -231,7 +231,7 @@ function App() {
                 {form.workType && needsInstallMode && !form.installMode && (
                   <div className="stack">
                     <button className="back-link" onClick={() => setForm((current) => ({ ...current, workType: '', installMode: '', actionMode: '' }))}>← Volver</button>
-                    <h3>¿Cómo querés resolverlo?</h3>
+                    <h3>Ahora elegí cómo querés hacerlo</h3>
                     <div className="grid cards-grid two-columns">
                       {installChoices.map((item) => (
                         <button
@@ -250,7 +250,7 @@ function App() {
                 {form.workType && (!needsInstallMode || form.installMode) && !form.actionMode && (
                   <div className="stack">
                     <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '', installMode: needsInstallMode ? '' : current.installMode }))}>← Volver</button>
-                    <h3>¿Cómo la querés accionar?</h3>
+                    <h3>¿La querés manual o motorizada?</h3>
                     <div className="grid cards-grid two-columns">
                       {modes.map((item) => (
                         <button
@@ -269,8 +269,8 @@ function App() {
                 {form.workType && (!needsInstallMode || form.installMode) && form.actionMode && (
                   <div className="stack">
                     <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '' }))}>← Volver</button>
-                    <h3>Cargá las medidas</h3>
-                    <p className="section-copy">Ingresá ancho y alto en metros por cada abertura.</p>
+                    <h3>Último paso: cargá las medidas</h3>
+                    <p className="section-copy">Escribí el ancho y el alto de cada ventana en metros. Ejemplo: 1.50 de ancho y 1.20 de alto.</p>
                     <div className="windows-list">
                       {form.windows.map((item, index) => (
                         <div key={index} className="window-card">
@@ -311,8 +311,13 @@ function App() {
                       ))}
                     </div>
 
-                    <div className="actions-row">
-                      <button className="secondary-button" onClick={addWindow}>+ Agregar otra abertura</button>
+                    <div className="actions-row stacked-actions">
+                      <button className="secondary-button" onClick={addWindow}>+ Agregar otra ventana</button>
+                      {canFinish && (
+                        <button className="primary-button full-width big-continue" onClick={() => setIsResultOpen(true)}>
+                          Ver mi cotización
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}
@@ -321,14 +326,14 @@ function App() {
               {canFinish && (
                 <aside className="summary-panel white-summary compact-summary">
                   <div className="summary-top">
-                    <span className="eyebrow">Siguiente paso</span>
-                    <h3>Ya podés ver tu cotización</h3>
+                    <span className="eyebrow">Listo</span>
+                    <h3>Ya está todo cargado</h3>
                   </div>
 
-                  <p className="section-copy">Cuando quieras, abrimos el resumen final con el valor estimado y el acceso a WhatsApp.</p>
+                  <p className="section-copy">Tocá el botón negro para ver el precio estimado y seguir por WhatsApp.</p>
 
                   <button className="primary-button full-width" onClick={() => setIsResultOpen(true)}>
-                    Continuar
+                    Ver mi cotización
                   </button>
                 </aside>
               )}
