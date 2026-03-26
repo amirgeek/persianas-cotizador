@@ -24,8 +24,8 @@ const modes = [
 ];
 
 const installChoices = [
-  { id: 'solo-compra', title: 'Solo compra', subtitle: 'Nosotros fabricamos, vos instalás.' },
-  { id: 'compra-instalacion', title: 'Compra + instalación', subtitle: 'Nos encargamos de todo.' },
+  { id: 'solo-compra', title: 'Solo compra', subtitle: 'Fabricamos la persiana y vos resolvés la colocación.' },
+  { id: 'compra-instalacion', title: 'Compra + instalación', subtitle: 'Nos encargamos de la provisión y la instalación.' },
 ];
 
 const pricing = {
@@ -52,13 +52,12 @@ function formatCurrency(value) {
 }
 
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({
     workType: '',
     installMode: '',
     actionMode: '',
     windows: initialWindows,
-    name: '',
-    phone: '',
   });
 
   const needsInstallMode = form.workType === 'obra';
@@ -143,164 +142,222 @@ function App() {
     }));
   };
 
+  const resetAndClose = () => {
+    setIsModalOpen(false);
+    setForm({ workType: '', installMode: '', actionMode: '', windows: initialWindows });
+  };
+
   return (
-    <div className="app-shell">
-      <div className="ambient ambient-a" />
-      <div className="ambient ambient-b" />
-      <main className="layout">
-        <section className="panel main-panel">
-          <div className="eyebrow">Cotizador interactivo</div>
-          <h1>Cotizá persianas en minutos</h1>
-          <p className="intro">
-            Elegí el tipo de trabajo, definí si la querés manual o motorizada, cargá las medidas y obtené un valor estimado al instante.
-          </p>
+    <div className="page-shell">
+      <header className="topbar">
+        <div className="brand">PERSIANAS</div>
+        <button className="nav-button" onClick={() => setIsModalOpen(true)}>Cotizar</button>
+      </header>
 
-          <div className="step-pill">Paso {step}</div>
-
-          {!form.workType && (
-            <div className="stack">
-              <h2>¿Qué necesitás?</h2>
-              <div className="grid cards-grid">
-                {workTypes.map((item) => (
-                  <button
-                    key={item.id}
-                    className="choice-card"
-                    onClick={() => setForm((current) => ({ ...current, workType: item.id }))}
-                  >
-                    <span className="choice-title">{item.title}</span>
-                    <span className="choice-subtitle">{item.subtitle}</span>
-                  </button>
-                ))}
-              </div>
+      <main>
+        <section className="hero-section">
+          <div className="hero-copy">
+            <div className="eyebrow">Cotización simple y rápida</div>
+            <h1>Persianas a medida, con una experiencia de cotización clara.</h1>
+            <p>
+              Mostrá tu servicio como algo serio: una landing limpia, un flujo guiado y una cotización estimada que el cliente puede enviar por WhatsApp en minutos.
+            </p>
+            <div className="hero-actions">
+              <button className="primary-button" onClick={() => setIsModalOpen(true)}>Cotizar ahora</button>
+              <a className="secondary-link" href="#como-funciona">Cómo funciona</a>
             </div>
-          )}
-
-          {form.workType && needsInstallMode && !form.installMode && (
-            <div className="stack">
-              <button className="back-link" onClick={() => setForm((current) => ({ ...current, workType: '', installMode: '', actionMode: '' }))}>← Volver</button>
-              <h2>¿Cómo querés resolverlo?</h2>
-              <div className="grid cards-grid two-columns">
-                {installChoices.map((item) => (
-                  <button
-                    key={item.id}
-                    className="choice-card"
-                    onClick={() => setForm((current) => ({ ...current, installMode: item.id }))}
-                  >
-                    <span className="choice-title">{item.title}</span>
-                    <span className="choice-subtitle">{item.subtitle}</span>
-                  </button>
-                ))}
-              </div>
+          </div>
+          <div className="hero-card">
+            <div className="hero-card-top">Estimación en tiempo real</div>
+            <div className="fake-quote-value">{formatCurrency(totals.total || 486000)}</div>
+            <div className="hero-card-list">
+              <span>Obra, recambio o cajón exterior</span>
+              <span>Manual o motorizada</span>
+              <span>Medidas por abertura</span>
+              <span>Envío directo por WhatsApp</span>
             </div>
-          )}
-
-          {form.workType && (!needsInstallMode || form.installMode) && !form.actionMode && (
-            <div className="stack">
-              <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '', installMode: needsInstallMode ? '' : current.installMode }))}>← Volver</button>
-              <h2>¿Cómo la querés accionar?</h2>
-              <div className="grid cards-grid two-columns">
-                {modes.map((item) => (
-                  <button
-                    key={item.id}
-                    className="choice-card"
-                    onClick={() => setForm((current) => ({ ...current, actionMode: item.id }))}
-                  >
-                    <span className="choice-title">{item.title}</span>
-                    <span className="choice-subtitle">{item.subtitle}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {form.workType && (!needsInstallMode || form.installMode) && form.actionMode && (
-            <div className="stack">
-              <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '' }))}>← Volver</button>
-              <h2>Cargá las medidas</h2>
-              <p className="section-copy">Ingresá ancho y alto en metros por cada abertura.</p>
-              <div className="windows-list">
-                {form.windows.map((item, index) => (
-                  <div key={index} className="window-card">
-                    <div className="window-header">
-                      <strong>Abertura {index + 1}</strong>
-                      {form.windows.length > 1 && (
-                        <button className="ghost-button" onClick={() => removeWindow(index)}>Eliminar</button>
-                      )}
-                    </div>
-                    <div className="measure-grid">
-                      <label>
-                        <span>Ancho (m)</span>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          placeholder="Ej: 1.50"
-                          value={item.width}
-                          onChange={(e) => updateWindow(index, 'width', e.target.value)}
-                        />
-                      </label>
-                      <label>
-                        <span>Alto (m)</span>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          placeholder="Ej: 1.20"
-                          value={item.height}
-                          onChange={(e) => updateWindow(index, 'height', e.target.value)}
-                        />
-                      </label>
-                    </div>
-                    <div className="window-meta">
-                      Superficie: <strong>{totals.detailed[index]?.sqm?.toFixed(2) || '0.00'} m²</strong>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="actions-row">
-                <button className="secondary-button" onClick={addWindow}>+ Agregar otra abertura</button>
-              </div>
-
-              <div className="result-card">
-                <div>
-                  <span className="mini-label">Precio estimado</span>
-                  <h3>{formatCurrency(totals.total)}</h3>
-                  <p>Valor orientativo según las medidas cargadas.</p>
-                </div>
-                <a className={`primary-button ${!canFinish ? 'disabled' : ''}`} href={canFinish ? whatsappHref : undefined} target="_blank" rel="noreferrer">
-                  Enviar cotización por WhatsApp
-                </a>
-              </div>
-            </div>
-          )}
+          </div>
         </section>
 
-        <aside className="panel summary-panel">
-          <div className="summary-top">
-            <span className="eyebrow">Resumen</span>
-            <h2>Tu cotización</h2>
+        <section className="features-section" id="como-funciona">
+          <div className="section-heading">
+            <div className="eyebrow">Cómo funciona</div>
+            <h2>Un flujo pensado para que cotizar no sea un dolor.</h2>
           </div>
-
-          <div className="summary-list">
-            <SummaryItem label="Tipo de trabajo" value={workTypes.find((item) => item.id === form.workType)?.title} />
-            {needsInstallMode && <SummaryItem label="Modalidad" value={installChoices.find((item) => item.id === form.installMode)?.title} />}
-            <SummaryItem label="Accionamiento" value={modes.find((item) => item.id === form.actionMode)?.title} />
-            <SummaryItem label="Aberturas" value={String(form.windows.length)} />
-            <SummaryItem label="Superficie total" value={totals.totalSqm ? `${totals.totalSqm.toFixed(2)} m²` : ''} />
+          <div className="features-grid">
+            <FeatureCard number="01" title="Elegís el tipo de trabajo" text="Obra, recambio o cajón exterior. Sin vueltas ni pantallas técnicas de más." />
+            <FeatureCard number="02" title="Definís el sistema" text="Manual o motorizado, y si aplica, solo compra o compra con instalación." />
+            <FeatureCard number="03" title="Cargás medidas" text="Una abertura por vez, con una experiencia mucho más simple que una planilla." />
+            <FeatureCard number="04" title="Mandás la cotización" text="El resultado final sale listo para compartir por WhatsApp al instante." />
           </div>
-
-          <div className="summary-total">
-            <span className="mini-label">Estimado</span>
-            <div className="total-value">{formatCurrency(totals.total)}</div>
-          </div>
-
-          <div className="note-box">
-            Precios inventados para prototipo UX/UI. Después se reemplazan por la lógica real de negocio.
-          </div>
-        </aside>
+        </section>
       </main>
+
+      {isModalOpen && (
+        <div className="modal-backdrop" onClick={resetAndClose}>
+          <div className="modal-shell" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-topbar">
+              <div>
+                <div className="eyebrow">Cotizador</div>
+                <h2>Cotizá tus persianas</h2>
+              </div>
+              <button className="close-button" onClick={resetAndClose}>✕</button>
+            </div>
+
+            <div className="modal-layout">
+              <section className="modal-main">
+                <div className="step-pill">Paso {step}</div>
+
+                {!form.workType && (
+                  <div className="stack">
+                    <h3>¿Qué necesitás?</h3>
+                    <div className="grid cards-grid">
+                      {workTypes.map((item) => (
+                        <button
+                          key={item.id}
+                          className="choice-card"
+                          onClick={() => setForm((current) => ({ ...current, workType: item.id }))}
+                        >
+                          <span className="choice-title">{item.title}</span>
+                          <span className="choice-subtitle">{item.subtitle}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {form.workType && needsInstallMode && !form.installMode && (
+                  <div className="stack">
+                    <button className="back-link" onClick={() => setForm((current) => ({ ...current, workType: '', installMode: '', actionMode: '' }))}>← Volver</button>
+                    <h3>¿Cómo querés resolverlo?</h3>
+                    <div className="grid cards-grid two-columns">
+                      {installChoices.map((item) => (
+                        <button
+                          key={item.id}
+                          className="choice-card"
+                          onClick={() => setForm((current) => ({ ...current, installMode: item.id }))}
+                        >
+                          <span className="choice-title">{item.title}</span>
+                          <span className="choice-subtitle">{item.subtitle}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {form.workType && (!needsInstallMode || form.installMode) && !form.actionMode && (
+                  <div className="stack">
+                    <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '', installMode: needsInstallMode ? '' : current.installMode }))}>← Volver</button>
+                    <h3>¿Cómo la querés accionar?</h3>
+                    <div className="grid cards-grid two-columns">
+                      {modes.map((item) => (
+                        <button
+                          key={item.id}
+                          className="choice-card"
+                          onClick={() => setForm((current) => ({ ...current, actionMode: item.id }))}
+                        >
+                          <span className="choice-title">{item.title}</span>
+                          <span className="choice-subtitle">{item.subtitle}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {form.workType && (!needsInstallMode || form.installMode) && form.actionMode && (
+                  <div className="stack">
+                    <button className="back-link" onClick={() => setForm((current) => ({ ...current, actionMode: '' }))}>← Volver</button>
+                    <h3>Cargá las medidas</h3>
+                    <p className="section-copy">Ingresá ancho y alto en metros por cada abertura.</p>
+                    <div className="windows-list">
+                      {form.windows.map((item, index) => (
+                        <div key={index} className="window-card">
+                          <div className="window-header">
+                            <strong>Abertura {index + 1}</strong>
+                            {form.windows.length > 1 && (
+                              <button className="ghost-button" onClick={() => removeWindow(index)}>Eliminar</button>
+                            )}
+                          </div>
+                          <div className="measure-grid">
+                            <label>
+                              <span>Ancho (m)</span>
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="Ej: 1.50"
+                                value={item.width}
+                                onChange={(e) => updateWindow(index, 'width', e.target.value)}
+                              />
+                            </label>
+                            <label>
+                              <span>Alto (m)</span>
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="Ej: 1.20"
+                                value={item.height}
+                                onChange={(e) => updateWindow(index, 'height', e.target.value)}
+                              />
+                            </label>
+                          </div>
+                          <div className="window-meta">
+                            Superficie: <strong>{totals.detailed[index]?.sqm?.toFixed(2) || '0.00'} m²</strong>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="actions-row">
+                      <button className="secondary-button" onClick={addWindow}>+ Agregar otra abertura</button>
+                    </div>
+                  </div>
+                )}
+              </section>
+
+              <aside className="summary-panel white-summary">
+                <div className="summary-top">
+                  <span className="eyebrow">Resumen</span>
+                  <h3>Tu cotización</h3>
+                </div>
+
+                <div className="summary-list">
+                  <SummaryItem label="Tipo de trabajo" value={workTypes.find((item) => item.id === form.workType)?.title} />
+                  {needsInstallMode && <SummaryItem label="Modalidad" value={installChoices.find((item) => item.id === form.installMode)?.title} />}
+                  <SummaryItem label="Accionamiento" value={modes.find((item) => item.id === form.actionMode)?.title} />
+                  <SummaryItem label="Aberturas" value={String(form.windows.length)} />
+                  <SummaryItem label="Superficie total" value={totals.totalSqm ? `${totals.totalSqm.toFixed(2)} m²` : ''} />
+                </div>
+
+                <div className="summary-total">
+                  <span className="mini-label">Estimado</span>
+                  <div className="total-value">{formatCurrency(totals.total)}</div>
+                </div>
+
+                <a className={`primary-button full-width ${!canFinish ? 'disabled' : ''}`} href={canFinish ? whatsappHref : undefined} target="_blank" rel="noreferrer">
+                  Enviar cotización por WhatsApp
+                </a>
+
+                <div className="note-box light-note">
+                  Prototipo con costos inventados para validar la UX. Después se ajusta con precios reales.
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+function FeatureCard({ number, title, text }) {
+  return (
+    <article className="feature-card">
+      <span className="feature-number">{number}</span>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </article>
   );
 }
 
