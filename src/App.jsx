@@ -170,47 +170,69 @@ function App() {
   return (
     <div className="page-shell">
       <header className="topbar">
-        <div className="brand">PERSIANAS</div>
+        <div className="brand-wrap">
+          <div className="brand-mark">RU</div>
+          <div>
+            <div className="brand">ROLL UP</div>
+            <div className="brand-sub">Persianas · Motorización · Cajón exterior</div>
+          </div>
+        </div>
         <button className="nav-button" onClick={() => { setIsModalOpen(true); setIsResultOpen(false); }}>Cotizar</button>
       </header>
 
       <main>
-        <section className="hero-section">
+        <section className="hero-section rollup-hero">
           <div className="hero-copy">
-            <div className="eyebrow">Cotización simple y rápida</div>
-            <h1>Persianas a medida, con una experiencia de cotización clara.</h1>
+            <div className="eyebrow">Roll Up MDP</div>
+            <h1>Persianas a medida con instalación, recambio y motorización.</h1>
             <p>
-              Mostrá tu servicio como algo serio: una landing limpia, un flujo guiado y una cotización estimada que el cliente puede enviar por WhatsApp en minutos.
+              Soluciones en persianas de PVC y aluminio, sistemas de cajón exterior y motorización para obra, recambio o viviendas ya terminadas.
             </p>
+            <div className="hero-badges">
+              <span>PVC y aluminio</span>
+              <span>Manual o motorizada</span>
+              <span>Cotización por WhatsApp</span>
+            </div>
             <div className="hero-actions">
               <button className="primary-button" onClick={() => { setIsModalOpen(true); setIsResultOpen(false); }}>Cotizar ahora</button>
               <a className="secondary-link" href="#como-funciona">Cómo funciona</a>
             </div>
           </div>
-          <div className="hero-card">
-            <div className="hero-card-top">Estimación en tiempo real</div>
-            <div className="fake-quote-value">{formatCurrency(totals.total || 486000)}</div>
-            <div className="hero-card-list">
-              <span>Obra, recambio o cajón exterior</span>
-              <span>Manual o motorizada</span>
-              <span>Medidas por abertura</span>
-              <span>Envío directo por WhatsApp</span>
+          <div className="hero-card rollup-card">
+            <div className="hero-card-top">Servicios</div>
+            <div className="service-stack">
+              <div className="service-item">
+                <strong>Persianas para obra</strong>
+                <span>Solo provisión o provisión + instalación</span>
+              </div>
+              <div className="service-item">
+                <strong>Recambio de persianas</strong>
+                <span>Reemplazo de sistemas existentes</span>
+              </div>
+              <div className="service-item">
+                <strong>Cajón exterior</strong>
+                <span>Para casas terminadas sin persiana</span>
+              </div>
+              <div className="service-item">
+                <strong>Motorización</strong>
+                <span>Accionamiento manual o a motor</span>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="features-section" id="como-funciona">
+        <section className="features-section rollup-info" id="como-funciona">
           <div className="section-heading">
-            <div className="eyebrow">Cómo funciona</div>
-            <h2>Un flujo pensado para que cotizar no sea un dolor.</h2>
+            <div className="eyebrow">Cómo trabajamos</div>
+            <h2>Un cotizador pensado para que el cliente entienda rápido qué necesita.</h2>
           </div>
           <div className="features-grid">
-            <FeatureCard number="01" title="Elegís el tipo de trabajo" text="Obra, recambio o cajón exterior. Sin vueltas ni pantallas técnicas de más." />
-            <FeatureCard number="02" title="Definís el sistema" text="Manual o motorizado, y si aplica, solo compra o compra con instalación." />
-            <FeatureCard number="03" title="Cargás medidas" text="Una abertura por vez, con una experiencia mucho más simple que una planilla." />
-            <FeatureCard number="04" title="Mandás la cotización" text="El resultado final sale listo para compartir por WhatsApp al instante." />
+            <FeatureCard number="01" title="Elegí el tipo de trabajo" text="Obra, recambio o cajón exterior según la situación de la vivienda." />
+            <FeatureCard number="02" title="Definí el sistema" text="Manual o motorizado, y si está en obra, solo compra o compra con instalación." />
+            <FeatureCard number="03" title="Cargá las medidas" text="Una abertura por vez, con un flujo simple y directo." />
+            <FeatureCard number="04" title="Seguimos por WhatsApp" text="La cotización sale lista para enviarla y continuar la atención comercial." />
           </div>
-        </section>
+        </section> 
       </main>
 
       {isModalOpen && (
