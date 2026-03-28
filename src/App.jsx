@@ -18,6 +18,12 @@ const workTypes = [
   },
 ];
 
+const materials = [
+  { id: 'pvc', title: 'PVC', subtitle: 'La opción más estándar y económica.' },
+  { id: 'aluminio', title: 'Aluminio', subtitle: 'Más robusto y con una terminación superior.' },
+  { id: 'no-se', title: 'No estoy seguro', subtitle: 'Después lo definimos por WhatsApp.' },
+];
+
 const modes = [
   { id: 'manual', title: 'Manual', subtitle: 'Accionamiento con cinta o manivela.' },
   { id: 'motor', title: 'Motorizada', subtitle: 'Más comodidad y mejor terminación.' },
@@ -41,6 +47,12 @@ const pricing = {
   },
 };
 
+const materialMultiplier = {
+  pvc: 1,
+  aluminio: 1.18,
+  'no-se': 1,
+};
+
 const initialWindows = [{ width: '', height: '' }];
 
 function formatCurrency(value) {
@@ -57,6 +69,7 @@ function App() {
   const [form, setForm] = useState({
     workType: '',
     installMode: '',
+    material: '',
     actionMode: '',
     windows: initialWindows,
   });
@@ -66,17 +79,21 @@ function App() {
   const step = useMemo(() => {
     if (!form.workType) return 1;
     if (needsInstallMode && !form.installMode) return 2;
-    if (!form.actionMode) return needsInstallMode ? 3 : 2;
-    return needsInstallMode ? 4 : 3;
+    if (!form.material) return needsInstallMode ? 3 : 2;
+    if (!form.actionMode) return needsInstallMode ? 4 : 3;
+    return needsInstallMode ? 5 : 4;
   }, [form, needsInstallMode]);
 
   const rate = useMemo(() => {
-    if (!form.workType || !form.actionMode) return 0;
+    if (!form.workType || !form.actionMode || !form.material) return 0;
+    let baseRate = 0;
     if (form.workType === 'obra') {
       if (!form.installMode) return 0;
-      return pricing.obra[form.installMode]?.[form.actionMode] || 0;
+      baseRate = pricing.obra[form.installMode]?.[form.actionMode] || 0;
+    } else {
+      baseRate = pricing[form.workType]?.default?.[form.actionMode] || 0;
     }
-    return pricing[form.workType]?.default?.[form.actionMode] || 0;
+    return baseRate * (materialMultiplier[form.material] || 1);
   }, [form]);
 
   const totals = useMemo(() => {
@@ -98,6 +115,7 @@ function App() {
   const whatsappText = useMemo(() => {
     const workLabel = workTypes.find((item) => item.id === form.workType)?.title || '-';
     const installLabel = installChoices.find((item) => item.id === form.installMode)?.title || 'No aplica';
+    const materialLabel = materials.find((item) => item.id === form.material)?.title || '-';
     const actionLabel = modes.find((item) => item.id === form.actionMode)?.title || '-';
     const windowsText = totals.detailed
       .filter((item) => item.sqm > 0)
@@ -109,6 +127,7 @@ function App() {
       '',
       `Tipo de trabajo: ${workLabel}`,
       needsInstallMode ? `Modalidad: ${installLabel}` : null,
+      `Material: ${materialLabel}`,
       `Accionamiento: ${actionLabel}`,
       '',
       'Medidas:',
@@ -146,7 +165,7 @@ function App() {
   const resetAndClose = () => {
     setIsModalOpen(false);
     setIsResultOpen(false);
-    setForm({ workType: '', installMode: '', actionMode: '', windows: initialWindows });
+    setForm({ workType: '', installMode: '', material: '', actionMode: '', windows: initialWindows });
   };
 
   const goBack = () => {
@@ -156,6 +175,10 @@ function App() {
     }
     if (form.actionMode) {
       setForm((current) => ({ ...current, actionMode: '' }));
+      return;
+    }
+    if (form.material) {
+      setForm((current) => ({ ...current, material: '' }));
       return;
     }
     if (needsInstallMode && form.installMode) {
@@ -323,7 +346,26 @@ function App() {
                   </div>
                 )}
 
-                {form.workType && (!needsInstallMode || form.installMode) && !form.actionMode && (
+                {form.workType && (!needsInstallMode || form.installMode) && !form.material && (
+                  <div className="stack">
+                    <button className="back-link" onClick={goBack}>← Volver</button>
+                    <h3>¿Qué material querés cotizar?</h3>
+                    <div className="grid cards-grid two-columns">
+                      {materials.map((item) => (
+                        <button
+                          key={item.id}
+                          className="choice-card"
+                          onClick={() => setForm((current) => ({ ...current, material: item.id }))}
+                        >
+                          <span className="choice-title">{item.title}</span>
+                          <span className="choice-subtitle">{item.subtitle}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {form.workType && (!needsInstallMode || form.installMode) && form.material && !form.actionMode && (
                   <div className="stack">
                     <button className="back-link" onClick={goBack}>← Volver</button>
                     <h3>¿La querés manual o motorizada?</h3>
@@ -342,7 +384,7 @@ function App() {
                   </div>
                 )}
 
-                {form.workType && (!needsInstallMode || form.installMode) && form.actionMode && (
+                {form.workType && (!needsInstallMode || form.installMode) && form.material && form.actionMode && (
                   <div className="stack">
                     <button className="back-link" onClick={goBack}>← Volver</button>
                     <h3>Último paso: cargá las medidas</h3>
@@ -432,6 +474,7 @@ function App() {
             <div className="summary-list">
               <SummaryItem label="Tipo de trabajo" value={workTypes.find((item) => item.id === form.workType)?.title} />
               {needsInstallMode && <SummaryItem label="Modalidad" value={installChoices.find((item) => item.id === form.installMode)?.title} />}
+              <SummaryItem label="Material" value={materials.find((item) => item.id === form.material)?.title} />
               <SummaryItem label="Accionamiento" value={modes.find((item) => item.id === form.actionMode)?.title} />
               <SummaryItem label="Aberturas" value={String(form.windows.length)} />
               <SummaryItem label="Superficie total" value={`${totals.totalSqm.toFixed(2)} m²`} />
